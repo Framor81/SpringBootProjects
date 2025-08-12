@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import net.javaguides.springboot.dto.UserDto;
 import net.javaguides.springboot.service.UserService;
@@ -25,7 +26,7 @@ public class UserController {
 
     // build create User REST API (can use  ResponseEntity to send HTTP RESponse)
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto user){
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto user){
         UserDto savedUser = userService.createUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
@@ -50,7 +51,7 @@ public class UserController {
     //http://localhost:8080/api/users/1
     @PutMapping("{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long userId, 
-                                           @RequestBody UserDto user){
+                                           @RequestBody @Valid UserDto user){
         user.setId(userId);
         UserDto updatedUser = userService.updateUser(user);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
@@ -63,17 +64,5 @@ public class UserController {
         return new ResponseEntity<>("User succesfully deleted!", HttpStatus.OK);
     }
 
-    // @ExceptionHandler(ResourceNotFoundException.class)
-    // public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException exception, 
-    //                                                                     WebRequest webRequest){
-    //     ErrorDetails errorDetails = new ErrorDetails(
-    //         LocalDateTime.now(),
-    //         exception.getMessage(),
-    //         webRequest.getDescription(false),
-    //         "USER_NOT_FOUND"
-    //     );
-
-    //     return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
-    // }
 
 }
